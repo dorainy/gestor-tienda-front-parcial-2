@@ -10,7 +10,7 @@ function users() {
         console.log('Productos: ', data);
 
         let listUser = `
-        <table class="table ">
+        <table class="table">
             <thead>
                 <tr>
                     <th scope="col">#</th>

@@ -28,7 +28,7 @@ function products() {
                     <td>${element.title}</td> 
                     <td>${element.price}</td>
                     <td>${element.description}</td>
-                     <td><img src="${element.images}" class="img-thumbnail" alt="avatar del usuario">
+                     <td><img src="${element.images[1]}" class="img-thumbnail" alt="avatar del usuario">
                         </td>
                     <td><button type="button" class="btn btn-outline-success" onclick="getProduct(${element.id})">Ver</button></td>
                 </tr>`;
@@ -39,7 +39,7 @@ function products() {
         </table>
        `;
 
-        console.log('HTML generado:', listProduct);
+       
         document.getElementById('info').innerHTML = listProduct;
     })
     .catch(error => {
@@ -68,7 +68,7 @@ function getProduct(idProduct) {
                     </div>
                   <div class="modal-body">
                     <div class="card">
-                       <img src="${product.images}" class="card-img-top" alt="...">
+                       <img src="${product.images[1]}" class="card-img-top" alt="...">
                       <div class="card-body">
                         <h5 class="card-title">Nombre:${product.title}</h5>
                         <p class="card-text">Precio: ${product.price}</p>
