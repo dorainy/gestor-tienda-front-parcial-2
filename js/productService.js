@@ -1,6 +1,6 @@
-function users() {
-    document.getElementById('cardHeader').innerHTML = '<h5>Usuarios</h5>';
-    const FAKESTORE_ENDPOINT = 'https://api.escuelajs.co/api/v1/users';
+function products() {
+    document.getElementById('cardHeader').innerHTML = '<h5>Productos</h5>';
+    const FAKESTORE_ENDPOINT = 'https://api.escuelajs.co/api/v1/products';
 
     fetch(FAKESTORE_ENDPOINT, {
         method: 'GET',
@@ -9,38 +9,38 @@ function users() {
     .then(data => {
         console.log('Productos: ', data);
 
-        let listUser = `
+        let listProduct = `
         <table class="table ">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Email</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Acción</th>
+                    <th scope="col">precio</th>
+                    <th scope="col">Descripcion</th>
                 </tr>
             </thead>
             <tbody>`;
 
         data.forEach(element => {
-            listUser += `
+            listProduct += `
                 <tr>
                     <td>${element.id}</td>
-                    <td>${element.email}</td>
-                    <td>${element.name}</td>
-                    <td>${element.role}</td>
-                    
-                    <td><button type="button" class="btn btn-outline-success" onclick="getUser(${element.id})">Ver</button></td>
+                    <td>${element.title}</td> 
+                    <td>${element.price}</td>
+                    <td>${element.description}</td>
+                     <td><img src="${element.images}" class="img-thumbnail" alt="avatar del usuario">
+                        </td>
+                    <td><button type="button" class="btn btn-outline-success" onclick="getProduct(${element.id})">Ver</button></td>
                 </tr>`;
         });
 
-        listUser += `
+        listProduct += `
             </tbody>
         </table>
        `;
 
-        console.log('HTML generado:', listUser);
-        document.getElementById('info').innerHTML = listUser;
+        console.log('HTML generado:', listProduct);
+        document.getElementById('info').innerHTML = listProduct;
     })
     .catch(error => {
         console.error('Error al obtener los productos:', error);
@@ -48,34 +48,31 @@ function users() {
     });
 }
 
-function getUser(idUser) {
-    const FAKESTORE_ENDPOINT = 'https://api.escuelajs.co/api/v1/users/'+ idUser;
+function getProduct(idProduct) {
+    const FAKESTORE_ENDPOINT = 'https://api.escuelajs.co/api/v1/products/'+ idProduct;
 
     fetch(FAKESTORE_ENDPOINT, {
         method: 'GET',
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Usuarios: ', data);
-            const user = data;
-            const modalUser = `
-            <div class="modal fade" id="modalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        console.log('Productos: ', data);
+            const product = data;
+            const modalProduct = `
+            <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ver Usuario</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ver producto</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                   <div class="modal-body">
                     <div class="card">
-                       <img src="${user.avatar}" class="card-img-top" alt="...">
+                       <img src="${product.images}" class="card-img-top" alt="...">
                       <div class="card-body">
-                        <h5 class="card-text">Nombre: ${user.name}</h5>
-                        <p class="card-title">Correo:${user.email}</p>
-                        <p class="card-text">Contraseña: ${user.password}</p>
-
-                        <p class="card-text">Rol: ${user.role}</p>
-                        
+                        <h5 class="card-title">Nombre:${product.title}</h5>
+                        <p class="card-text">Precio: ${product.price}</p>
+                        <p class="card-text">Descripcion: ${product.description}</p>
                       </div>
                     </div>
                   </div>
@@ -85,8 +82,8 @@ function getUser(idUser) {
                 </div>
               </div>
             </div>`;
-            document.getElementById('viewModal').innerHTML = modalUser;
-            const modal = new bootstrap.Modal(document.getElementById('modalUser'));
+            document.getElementById('viewModal').innerHTML = modalProduct;
+            const modal = new bootstrap.Modal(document.getElementById('modalProduct'));
             modal.show();
         })
         .catch(error => {
@@ -95,6 +92,3 @@ function getUser(idUser) {
         });
     
 }
-
-
-
