@@ -1,100 +1,93 @@
 function users() {
-    document.getElementById('cardHeader').innerHTML = '<h5>Usuarios</h5>';
+    document.getElementById('cardHeader').innerHTML = '<h5 class="text-white">Lista de Usuarios</h5>';
     const FAKESTORE_ENDPOINT = 'https://api.escuelajs.co/api/v1/users';
 
-    fetch(FAKESTORE_ENDPOINT, {
-        method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Productos: ', data);
+    fetch(FAKESTORE_ENDPOINT, { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Usuarios:', data);
 
-        let listUser = `
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Acción</th>
-                </tr>
-            </thead>
-            <tbody>`;
+            let listUser = `
+            <div class="table-responsive">
+                <table class="table table-striped table-hover border-success">
+                    <thead class="table-success text-white">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
-        data.forEach(element => {
+            data.forEach(element => {
+                listUser += `
+                    <tr>
+                        <td>${element.id}</td>
+                        <td class="text-primary">${element.email}</td>
+                        <td class="fw-bold text-success">${element.name}</td>
+                        <td class="text-secondary">${element.role}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-success" onclick="getUser(${element.id})">
+                                Ver Detalles
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+
             listUser += `
-                <tr>
-                    <td>${element.id}</td>
-                    <td>${element.email}</td>
-                    <td>${element.name}</td>
-                    <td>${element.role}</td>
-                    
-                    <td><button type="button" class="btn btn-outline-success" onclick="getUser(${element.id})">Ver</button></td>
-                </tr>`;
+                    </tbody>
+                </table>
+            </div>`;
+
+            document.getElementById('info').innerHTML = listUser;
+        })
+        .catch(error => {
+            console.error('Error al obtener los usuarios:', error);
+            document.getElementById('info').innerHTML = '<p class="text-danger">Error al cargar usuarios</p>';
         });
-
-        listUser += `
-            </tbody>
-        </table>
-       `;
-
-        console.log('HTML generado:', listUser);
-        document.getElementById('info').innerHTML = listUser;
-    })
-    .catch(error => {
-        console.error('Error al obtener los productos:', error);
-        document.getElementById('info').innerHTML = '<p>Error al cargar productos</p>';
-    });
 }
 
 function getUser(idUser) {
-    const FAKESTORE_ENDPOINT = 'https://api.escuelajs.co/api/v1/users/'+ idUser;
+    const FAKESTORE_ENDPOINT = `https://api.escuelajs.co/api/v1/users/${idUser}`;
 
-    fetch(FAKESTORE_ENDPOINT, {
-        method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Usuarios: ', data);
-            const user = data;
+    fetch(FAKESTORE_ENDPOINT, { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Usuario:', data);
+            
             const modalUser = `
             <div class="modal fade" id="modalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ver Usuario</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Detalles del Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div class="card shadow-sm border-success">
+                                <img src="${data.avatar}" class="card-img-top rounded-circle mx-auto mt-3" style="width: 150px;" alt="Avatar">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">${data.name}</h5>
+                                    <p class="card-text"><strong>Correo:</strong> ${data.email}</p>
+                                    <p class="card-text"><strong>Rol:</strong> ${data.role}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
                     </div>
-                  <div class="modal-body">
-                    <div class="card">
-                       <img src="${user.avatar}" class="card-img-top" alt="...">
-                      <div class="card-body">
-                        <h5 class="card-text">Nombre: ${user.name}</h5>
-                        <p class="card-title">Correo:${user.email}</p>
-                        <p class="card-text">Contraseña: ${user.password}</p>
-
-                        <p class="card-text">Rol: ${user.role}</p>
-                        
-                      </div>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                  </div>
                 </div>
-              </div>
             </div>`;
+
             document.getElementById('viewModal').innerHTML = modalUser;
             const modal = new bootstrap.Modal(document.getElementById('modalUser'));
             modal.show();
         })
         .catch(error => {
-            console.error('error al obtener los productos', error)
-            document.getElementById('info').innerHTML = '<h3>No se encontró el producto en la API</h3>';
+            console.error('Error al obtener el usuario:', error);
+            document.getElementById('info').innerHTML = '<h3 class="text-danger">No se encontró el usuario en la API</h3>';
         });
-    
 }
-
-
-
